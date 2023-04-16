@@ -9,6 +9,8 @@ import {InputResponse, isSelectProjectCardToPlayResponse} from '../../common/inp
 
 export class SelectProjectCardToPlay extends BasePlayerInput {
   public reserveUnits: Array<Units>;
+  public allCards: Array<IProjectCard>;
+  public enabledCards: Array<boolean>;
 
   constructor(
     private player: Player,
@@ -22,6 +24,7 @@ export class SelectProjectCardToPlay extends BasePlayerInput {
     this.reserveUnits = this.cards.map((card) => {
       return card.reserveUnits ? MoonExpansion.adjustedReserveCosts(player, card) : Units.EMPTY;
     });
+    [this.allCards, this.enabledCards] = player.addUnplayableCardsAndCalculateEnabled(this.cards);
   }
 
   public process(input: InputResponse) {

@@ -350,7 +350,9 @@ export default Vue.extend({
   <div v-if="showtitle === true">{{ $t(playerinput.title) }}</div>
 
   <label v-for="availableCard in cards" class="payments_cards" :key="availableCard.name">
-    <input class="hidden" type="radio" v-model="cardName" v-on:change="cardChanged()" :value="availableCard.name" />
+    <template v-if="!availableCard.isDisabled">
+      <input class="hidden" type="radio" v-model="cardName" v-on:change="cardChanged()" :value="availableCard.name" />
+    </template>
     <Card class="cardbox" :card="availableCard" />
   </label>
 

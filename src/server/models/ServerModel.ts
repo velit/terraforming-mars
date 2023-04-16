@@ -262,7 +262,11 @@ export class Server {
       break;
     case PlayerInputType.SELECT_PROJECT_CARD_TO_PLAY:
       const spctp: SelectProjectCardToPlay = waitingFor as SelectProjectCardToPlay;
-      playerInputModel.cards = this.getCards(player, spctp.cards, {showCalculatedCost: true, reserveUnits: spctp.reserveUnits});
+      playerInputModel.cards = this.getCards(player, spctp.allCards, {
+        showCalculatedCost: true,
+        reserveUnits: spctp.reserveUnits,
+        enabled: spctp.enabledCards,
+      });
       playerInputModel.microbes = player.getSpendableMicrobes();
       playerInputModel.floaters = player.getSpendableFloaters();
       playerInputModel.canUseHeat = player.canUseHeatAsMegaCredits;

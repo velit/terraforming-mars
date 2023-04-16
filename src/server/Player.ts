@@ -1548,7 +1548,7 @@ export class Player {
     return this.ceoCardsInHand.filter((card) => card.canPlay?.(this) === true);
   }
 
-  public getPlayableCards(): Array<IProjectCard> {
+  private getCandidateHand(): Array<IProjectCard> {
     const candidateCards: Array<IProjectCard> = [...this.cardsInHand];
     // Self Replicating robots check
     const card = this.playedCards.find((card) => card.name === CardName.SELF_REPLICATING_ROBOTS);
@@ -1557,8 +1557,25 @@ export class Player {
         candidateCards.push(targetCard.card);
       }
     }
+    return candidateCards;
+  }
 
-    return candidateCards.filter((card) => this.canPlay(card));
+  public getPlayableCards(): Array<IProjectCard> {
+    return this.getCandidateHand().filter((card) => this.canPlay(card));
+  }
+
+  private getUnplayableCards(): Array<IProjectCard> {
+    return this.getCandidateHand().filter((card) => !this.canPlay(card));
+  }
+
+  public addUnplayableCardsAndCalculateEnabled(cards: Array<IProjectCard>): [Array<IProjectCard>, Array<boolean>] {
+    const unplayableCards = this.getUnplayableCards();
+    const allCards = [...cards, ...unplayableCards];
+    const enabledCards: Array<boolean> = [];
+    for (let i = 0; i < allCards.length; i++) {
+      enabledCards.push(i < cards.length);
+    }
+    return [allCards, enabledCards];
   }
 
   // TODO(kberg): After migration, see if this can become private again.
